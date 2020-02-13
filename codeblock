@@ -5,23 +5,55 @@
 For example: codeblock README.md
 """
 
+from __future__ import annotations
+
 import re
 import sys
 from textwrap import indent
+import subprocess
+from typing import Tuple
 
-def main(language, filename):
-    if language not in ('--py', '--python'):
-        raise NotImplementedError('languages other than --python not implemented')
 
-    blocks = re.findall(r"\n```python\n(.*?)\n```", open(filename).read(), re.DOTALL)
-    if not blocks:
-        return
-    print(
-        "\n\n\n".join(
-            f'def test_{i}() -> None:\n{indent(block, " " * 4)}'
-            for i, block in enumerate(blocks)
+def main(language, filename, *args: Tuple[str, ...]):
+    if language not in ("--py", "--python"):
+        raise NotImplementedError("languages other than --python not implemented")
+
+    command = []
+    if args:
+        if args[0] != "--":
+            raise Exception(f"-- expected, but got {args[0]}")
+        command = args[1:]
+
+    if command:
+
+        def replace(match: re.Match[str]) -> str:
+            input = match.group("code").encode("utf8")
+            process = subprocess.run(command, input=input, capture_output=True)
+            output = process.stdout.decode("utf8")
+            return match.expand(fr"\g<start>{output}\g<end>")
+
+        pattern = re.compile(
+            r"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
         )
-    )
 
-if __name__ == '__main__':
+        input = open(filename).read()
+
+        with open(filename, "wb") as output_file:
+            output_file.write(re.sub(pattern, replace, input, re.DOTALL).encode("utf8"))
+
+    else:
+        blocks = re.findall(
+            r"\n```python\n(.*?)\n```", open(filename).read(), re.DOTALL
+        )
+        if not blocks:
+            return
+        print(
+            "\n\n\n".join(
+                f'def test_{i}() -> None:\n{indent(block, " " * 4)}'
+                for i, block in enumerate(blocks)
+            )
+        )
+
+
+if __name__ == "__main__":
     main(*sys.argv[1:])

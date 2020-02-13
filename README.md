@@ -49,8 +49,9 @@ Found 1 error in 1 file (checked 1 source file)
 * [ ] automatically add `async` for functions with `await` in them
 * [ ] support other languages
 * [x] mention alternatives: blacken-docs, ...
-* [ ] support in-place modifications
+* [x] support in-place modifications
 * [ ] use proper markdown parser
+* [ ] support multiple files
 
 # Related
 
