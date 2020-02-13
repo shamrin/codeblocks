@@ -10,4 +10,5 @@ Extract and process code blocks from markdown files.
 * [ ] automatically add `async` for functions with `await` in them
 * [ ] support other languages
 * [ ] mention alternatives: blacken-docs, ...
-* [ ] support inplace modifications
+* [ ] support in-place modifications
+* [ ] use proper markdown parser
