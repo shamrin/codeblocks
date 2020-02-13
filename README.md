@@ -4,26 +4,34 @@ Extract and process code blocks from markdown files.
 
 # Examples
 
-Check formatting of Python code blocks with black:
-
+Extract Python code blocks:
 ```
-codeblock --python README.md | black --check
+codeblock --python README.md
+```
+
+Check formatting of Python code blocks with black:
+```
+codeblock --python README.md | black --check -
 ```
 
 Reformat Python code blocks with black, in place:
-
 ```
-codeblock --python README.md --modify black
+codeblock --python README.md -- black -
+```
+
+Type check Python code blocks with mypy:
+```
+mypy somemodule anothermodule <(codeblock --python README.md)
 ```
 
 # TODO
 
-* [ ] example for black
-* [ ] example for mypy
+* [x] example for black
+* [x] example for mypy
 * [ ] example for pytest
 * [ ] automatically add `async` for functions with `await` in them
 * [ ] support other languages
-* [ ] mention alternatives: blacken-docs, ...
+* [x] mention alternatives: blacken-docs, ...
 * [ ] support in-place modifications
 * [ ] use proper markdown parser
 
