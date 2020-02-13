@@ -43,13 +43,10 @@ Found 1 error in 1 file (checked 1 source file)
 
 # TODO
 
-* [x] example for black
-* [x] example for mypy
+* [ ] use bytes re
 * [ ] example for pytest
 * [ ] automatically add `async` for functions with `await` in them
 * [ ] support other languages
-* [x] mention alternatives: blacken-docs, ...
-* [x] support in-place modifications
 * [ ] use proper markdown parser
 * [ ] support multiple files
 
