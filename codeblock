@@ -9,11 +9,19 @@ import re
 import sys
 from textwrap import indent
 
-doc = open(sys.argv[1])
-blocks = re.findall(r"\n```python\n(.*?)\n```", doc.read(), re.DOTALL)
-print(
-    "\n\n\n".join(
-        f'def test_{i}() -> None:\n{indent(block, " " * 4)}'
-        for i, block in enumerate(blocks)
+def main(language, filename):
+    if language not in ('--py', '--python'):
+        raise NotImplementedError('languages other than --python not implemented')
+
+    blocks = re.findall(r"\n```python\n(.*?)\n```", open(filename).read(), re.DOTALL)
+    if not blocks:
+        return
+    print(
+        "\n\n\n".join(
+            f'def test_{i}() -> None:\n{indent(block, " " * 4)}'
+            for i, block in enumerate(blocks)
+        )
     )
-)
+
+if __name__ == '__main__':
+    main(*sys.argv[1:])
