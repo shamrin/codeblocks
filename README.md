@@ -43,7 +43,8 @@ Found 1 error in 1 file (checked 1 source file)
 
 # TODO
 
-* [ ] use bytes re
+* [ ] protect against empty (and weird?) in-place modifications
+* [ ] use same regex for both modes
 * [ ] example for pytest
 * [ ] automatically add `async` for functions with `await` in them
 * [ ] support other languages

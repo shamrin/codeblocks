@@ -26,20 +26,19 @@ def main(language, filename, *args: Tuple[str, ...]):
 
     if command:
 
-        def replace(match: re.Match[str]) -> str:
-            input = match.group("code").encode("utf8")
-            process = subprocess.run(command, input=input, capture_output=True)
-            output = process.stdout.decode("utf8")
-            return match.expand(fr"\g<start>{output}\g<end>")
+        def replace(match: re.Match[bytes]) -> bytes:
+            input = match.group("code")
+            output = subprocess.run(command, input=input, capture_output=True).stdout
+            return match.expand(br"\g<start>%s\g<end>" % output)
 
         pattern = re.compile(
-            r"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
+            rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
         )
 
-        input = open(filename).read()
+        input = open(filename, 'rb').read()
 
         with open(filename, "wb") as output_file:
-            output_file.write(re.sub(pattern, replace, input, re.DOTALL).encode("utf8"))
+            output_file.write(re.sub(pattern, replace, input, re.DOTALL))
 
     else:
         blocks = re.findall(
