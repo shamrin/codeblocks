@@ -24,6 +24,23 @@ Type check Python code blocks with mypy:
 mypy somemodule anothermodule <(codeblock --python README.md)
 ```
 
+# Full type checking example
+
+```python
+def plus(x: int, y: int) -> int:
+    return x + y
+
+plus(1, '2')
+```
+
+```
+$ mypy --pretty --strict <(codeblock --python README.md)
+/dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"
+        plus(1, '2')
+                ^
+Found 1 error in 1 file (checked 1 source file)
+```
+
 # TODO
 
 * [x] example for black
