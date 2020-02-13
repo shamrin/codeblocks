@@ -2,6 +2,20 @@
 
 Extract and process code blocks from markdown files.
 
+# Examples
+
+Check formatting of Python code blocks with black:
+
+```
+codeblock --python README.md | black --check
+```
+
+Reformat Python code blocks with black, in place:
+
+```
+codeblock --python README.md --modify black
+```
+
 # TODO
 
 * [ ] example for black
