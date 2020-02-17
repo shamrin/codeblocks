@@ -11,7 +11,11 @@ import re
 import sys
 from textwrap import indent
 import subprocess
-from typing import Tuple
+
+
+PYTHON_BLOCK_RE = re.compile(
+    rb"(?P<start>\n```python\n)(?P<code>.*?)(?P<end>\n```)", re.DOTALL
+)
 
 
 def main():
@@ -26,6 +30,8 @@ def main():
             raise Exception(f"-- expected, but got {args[0]}")
         command = args[1:]
 
+    input = open(filename, "rb").read()
+
     if command:
 
         def replace(match: re.Match[bytes]) -> bytes:
@@ -33,19 +39,14 @@ def main():
             output = subprocess.run(command, input=input, capture_output=True).stdout
             return match.expand(br"\g<start>%s\g<end>" % output)
 
-        pattern = re.compile(
-            rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
-        )
-
-        input = open(filename, 'rb').read()
-
         with open(filename, "wb") as output_file:
-            output_file.write(re.sub(pattern, replace, input, re.DOTALL))
+            output_file.write(PYTHON_BLOCK_RE.sub(replace, input))
 
     else:
-        blocks = re.findall(
-            r"\n```python\n(.*?)\n```", open(filename).read(), re.DOTALL
-        )
+        blocks = [
+            match.group("code").decode("utf8")
+            for match in PYTHON_BLOCK_RE.finditer(input)
+        ]
         if not blocks:
             return
         print(

@@ -1,6 +1,12 @@
 # codeblocks
 
-Extract and process code blocks from markdown files.
+Extract and process code blocks from Markdown files. Now you can keep code examples automatically:
+
+* formatted (e.g. using [black][] for Python)
+* type checked
+* unit tested
+* linted
+* etc
 
 # Examples
 
@@ -14,7 +20,7 @@ Check formatting of Python code blocks with black:
 codeblocks --python README.md | black --check -
 ```
 
-Reformat Python code blocks with black, in place:
+Reformat Python code blocks with black, **in place**:
 ```
 codeblocks --python README.md -- black -
 ```
@@ -41,27 +47,20 @@ $ mypy --pretty --strict <(codeblocks --python README.md)
 Found 1 error in 1 file (checked 1 source file)
 ```
 
-# TODO
+# Rationale
 
-* [ ] move TODO into separate file
-* [ ] pip and poetry instructions
-* [ ] add rationale
-* [ ] protect against empty (and weird?) in-place modifications
-* [ ] use same regex for both modes
-* [ ] example for pytest
-* [ ] automatically add `async` for functions with `await` in them
-* [ ] support other languages
-* [ ] use proper markdown parser
-* [ ] support multiple files
+There are alternative tools, but none of them supported all of the cases above.
 
-# Related
+* [prettier][] [can reformat Markdown code blocks][prettier-md] ([PR][prettier-pr]), but it works only for supported languages like JavaScript. It does not support Python. No lint or unit test support.
+* [blacken-docs][] can reformat Python code blocks, but it does not support all [black][] options. For example, [`black --check`][blacken-check] is not supported. No lint or unit test support. In addition, `codeblocks` implementation is much simpler and is not coupled with black.
+* [excode][] is very similar, but does not support in place modifications.
+* [gfm-code-blocks][] does not have command line interface.
 
-* https://github.com/nschloe/excode
-* https://github.com/jonschlinkert/gfm-code-blocks
-* [blacken-docs][] ([does not support `black --check`][blacken-check])
-* [prettier works out of the box for supported languages][prettier] ([PR][prettier-pr])
-
+[black]: https://github.com/psf/black
+[prettier]: https://prettier.io
+[prettier-md]: https://prettier.io/blog/2017/11/07/1.8.0.html#markdown-support
+[prettier-pr]: https://github.com/prettier/prettier/pull/2943
 [blacken-docs]: https://github.com/asottile/blacken-docs
 [blacken-check]: https://github.com/asottile/blacken-docs/issues/42
-[prettier]: https://prettier.io/blog/2017/11/07/1.8.0.html#markdown-support
-[prettier-pr]: https://github.com/prettier/prettier/pull/2943
+[excode]: https://github.com/nschloe/excode
+[gfm-code-blocks]: https://github.com/jonschlinkert/gfm-code-blocks
