@@ -2,7 +2,7 @@
 
 """Output code blocks from markdown file
 
-For example: codeblock README.md
+For example: codeblocks README.md
 """
 
 from __future__ import annotations

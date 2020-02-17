@@ -1,4 +1,4 @@
-# codeblock
+# codeblocks
 
 Extract and process code blocks from markdown files.
 
@@ -6,22 +6,22 @@ Extract and process code blocks from markdown files.
 
 Extract Python code blocks:
 ```
-codeblock --python README.md
+codeblocks --python README.md
 ```
 
 Check formatting of Python code blocks with black:
 ```
-codeblock --python README.md | black --check -
+codeblocks --python README.md | black --check -
 ```
 
 Reformat Python code blocks with black, in place:
 ```
-codeblock --python README.md -- black -
+codeblocks --python README.md -- black -
 ```
 
 Type check Python code blocks with mypy:
 ```
-mypy somemodule anothermodule <(codeblock --python README.md)
+mypy somemodule anothermodule <(codeblocks --python README.md)
 ```
 
 # Full type checking example
@@ -34,7 +34,7 @@ plus(1, '2')
 ```
 
 ```
-$ mypy --pretty --strict <(codeblock --python README.md)
+$ mypy --pretty --strict <(codeblocks --python README.md)
 /dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"
         plus(1, '2')
                 ^
