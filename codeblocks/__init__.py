@@ -9,16 +9,36 @@ from __future__ import annotations
 
 import re
 import sys
-from textwrap import indent
 import subprocess
 
 
 PYTHON_BLOCK_RE = re.compile(
-    rb"(?P<start>\n```python\n)(?P<code>.*?)(?P<end>\n```)", re.DOTALL
+    rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
 
 
+def indent(text: bytes, prefix: bytes):
+    """Add 'prefix' to the beginning of all non-empty lines in 'text'
+
+    Like textwrap.indent, but for bytes.
+    """
+
+    return b"".join(
+        (prefix + line if not line.isspace() else line)
+        for line in text.splitlines(True)
+    )
+
+
+def wrap(index: int, block: bytes):
+    return b"def test_%d() -> None:\n%s" % (index, indent(block, b" " * 4),)
+
+
 def main():
+    option_wrap = False
+    if "--wrap" in sys.argv[1:]:
+        sys.argv.remove("--wrap")
+        option_wrap = True
+
     language, filename, *args = sys.argv[1:]
 
     if language not in ("--py", "--python"):
@@ -35,23 +55,19 @@ def main():
     if command:
 
         def replace(match: re.Match[bytes]) -> bytes:
-            input = match.group("code")
-            output = subprocess.run(command, input=input, capture_output=True).stdout
-            return match.expand(br"\g<start>%s\g<end>" % output)
+            p = subprocess.run(command, input=match.group("code"), capture_output=True)
+            return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
         with open(filename, "wb") as output_file:
             output_file.write(PYTHON_BLOCK_RE.sub(replace, input))
 
     else:
-        blocks = [
-            match.group("code").decode("utf8")
-            for match in PYTHON_BLOCK_RE.finditer(input)
-        ]
+        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(input)]
         if not blocks:
             return
-        print(
-            "\n\n\n".join(
-                f'def test_{i}() -> None:\n{indent(block, " " * 4)}'
+        sys.stdout.buffer.write(
+            b"\n\n".join(
+                wrap(i, block) if option_wrap else block
                 for i, block in enumerate(blocks)
             )
         )

@@ -25,9 +25,9 @@ Reformat Python code blocks with black, **in place**:
 codeblocks --python README.md -- black -
 ```
 
-Type check Python code blocks with mypy:
+Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):
 ```
-mypy somemodule anothermodule <(codeblocks --python README.md)
+mypy somemodule anothermodule <(codeblocks --python --wrap README.md)
 ```
 
 # Full type checking example
