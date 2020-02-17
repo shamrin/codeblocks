@@ -1,9 +1,11 @@
 [tool.poetry]
-name = "codeblock"
+name = "codeblocks"
 version = "0.1.0"
 description = "Extract and process code blocks from markdown files."
 authors = ["Alexey Shamrin <shamrin@gmail.com>"]
 license = "Apache License 2.0"
+[tool.poetry.scripts]
+codeblocks = 'codeblocks:main'
 
 [tool.poetry.dependencies]
 python = "^3.7"

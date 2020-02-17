@@ -14,7 +14,9 @@ import subprocess
 from typing import Tuple
 
 
-def main(language, filename, *args: Tuple[str, ...]):
+def main():
+    language, filename, *args = sys.argv[1:]
+
     if language not in ("--py", "--python"):
         raise NotImplementedError("languages other than --python not implemented")
 
@@ -55,4 +57,4 @@ def main(language, filename, *args: Tuple[str, ...]):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main()
