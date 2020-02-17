@@ -43,6 +43,9 @@ Found 1 error in 1 file (checked 1 source file)
 
 # TODO
 
+* [ ] move TODO into separate file
+* [ ] pip and poetry instructions
+* [ ] add rationale
 * [ ] protect against empty (and weird?) in-place modifications
 * [ ] use same regex for both modes
 * [ ] example for pytest
