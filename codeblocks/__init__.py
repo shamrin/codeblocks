@@ -11,10 +11,11 @@ import re
 import sys
 import subprocess
 
-
 PYTHON_BLOCK_RE = re.compile(
     rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
+
+WORD_RE = re.compile(rb"\w+")
 
 
 def indent(text: bytes, prefix: bytes):
@@ -50,27 +51,32 @@ def main():
             raise Exception(f"-- expected, but got {args[0]}")
         command = args[1:]
 
-    input = open(filename, "rb").read()
+    source = open(filename, "rb").read()
 
     if command:
 
         def replace(match: re.Match[bytes]) -> bytes:
-            p = subprocess.run(command, input=match.group("code"), capture_output=True)
+            code = match.group("code")
+            p = subprocess.run(command, input=code, capture_output=True)
+            if set(WORD_RE.findall(code)) != set(WORD_RE.findall(p.stdout)):
+                raise Exception(
+                    f"Command did not produce matching output: {' '.join(command)}"
+                )
             return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
+        processed = PYTHON_BLOCK_RE.sub(replace, source)
         with open(filename, "wb") as output_file:
-            output_file.write(PYTHON_BLOCK_RE.sub(replace, input))
+            output_file.write(processed)
 
     else:
-        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(input)]
-        if not blocks:
-            return
-        sys.stdout.buffer.write(
-            b"\n\n".join(
-                wrap(i, block) if option_wrap else block
-                for i, block in enumerate(blocks)
+        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(source)]
+        if blocks:
+            sys.stdout.buffer.write(
+                b"\n\n".join(
+                    wrap(i, block) if option_wrap else block
+                    for i, block in enumerate(blocks)
+                )
             )
-        )
 
 
 if __name__ == "__main__":

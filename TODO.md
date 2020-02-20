@@ -1,12 +1,16 @@
 # TODO
 
+* [x] protect against empty (and weird?) in-place modifications
+* [ ] do not truncate file (use atomic rename?): add time.sleep(1) before .write() to see truncation
 * [ ] test and lint
 * [ ] better command line parsing
-* [ ] do not truncate file for in-place modifications (use atomic rename?)
+* [ ] better error handling
 * [ ] pip and poetry instructions
-* [ ] protect against empty (and weird?) in-place modifications
-* [ ] example for pytest
+* [ ] examples for pytest, isort, autoflake
 * [ ] automatically add `async` for functions with `await` in them
+
+# Later
+
 * [ ] support other languages
 * [ ] use proper markdown parser
 * [ ] support multiple files
