@@ -13,8 +13,8 @@ import subprocess
 
 import click
 
-PYTHON_BLOCK_RE = re.compile(
-    rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
+BLOCK_RE = re.compile(
+    rb"(?P<start>\n```(?P<type>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
 
 WORD_RE = re.compile(rb"\w+")
@@ -41,20 +41,42 @@ def wrap_python(index: int, block: bytes):
     )
 
 
+def wrap_block(index: int, block_type: str, block: bytes):
+    if block_type == "python":
+        return wrap_python(index, block)
+    else:
+        raise NotImplementedError(
+            f"wrapping `{block_type}` code blocks not implemented"
+        )
+
+
 @click.command()
-@click.option("--python", "--py", is_flag=True, help="Extract Python code blocks.")
+@click.option("--type", help="Select code blocks of specified type only.")
 @click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
 @click.argument("source", type=click.Path(dir_okay=False, exists=True, allow_dash=True))
 @click.argument("command", nargs=-1)
-def main(source, python, wrap, command):
-    if not python:
-        raise NotImplementedError("languages other than --python not implemented")
+def main(source, type, wrap, command):
+    """Extract or process code blocks in Markdown FILE.
+
+    \b
+    Extract Python code blocks:
+        codeblocks --type python README.md
+
+    \b
+    Reformat Python code blocks using black, in place:
+        codeblocks --type python README.md black -
+    """
 
     input = click.open_file(source, "rb").read()
 
     if command:
 
         def replace(match: re.Match[bytes]) -> bytes:
+            block_type = match.group("type").decode("utf8")
+
+            if type is not None and block_type != type:
+                return match.expand(br"\g<start>\g<code>\g<end>")
+
             code = match.group("code")
             p = subprocess.run(command, input=code, capture_output=True)
             if set(WORD_RE.findall(code)) != set(WORD_RE.findall(p.stdout)):
@@ -63,17 +85,21 @@ def main(source, python, wrap, command):
                 )
             return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
-        output = PYTHON_BLOCK_RE.sub(replace, input)
+        output = BLOCK_RE.sub(replace, input)
         with click.open_file(source, "wb", atomic=True) as output_file:
             output_file.write(output)
 
     else:
-        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(input)]
+        blocks = [
+            (match.group("type").decode("utf8"), match.group("code"))
+            for match in BLOCK_RE.finditer(input)
+        ]
         if blocks:
             sys.stdout.buffer.write(
                 b"\n\n".join(
-                    wrap_python(i, block) if wrap else block
-                    for i, block in enumerate(blocks)
+                    wrap_block(i, block_type, block) if wrap else block
+                    for i, (block_type, block) in enumerate(blocks)
+                    if type is None or block_type == type
                 )
             )
 
