@@ -16,6 +16,7 @@ PYTHON_BLOCK_RE = re.compile(
 )
 
 WORD_RE = re.compile(rb"\w+")
+AWAIT_RE = re.compile(rb"\bawait\b")
 
 
 def indent(text: bytes, prefix: bytes):
@@ -31,7 +32,11 @@ def indent(text: bytes, prefix: bytes):
 
 
 def wrap(index: int, block: bytes):
-    return b"def test_%d() -> None:\n%s" % (index, indent(block, b" " * 4),)
+    return b"%sdef test_%d() -> None:\n%s" % (
+        b"async " if AWAIT_RE.search(block) else b"",
+        index,
+        indent(block, b" " * 4),
+    )
 
 
 def main():
