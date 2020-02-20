@@ -22,7 +22,7 @@ codeblocks --python README.md | black --check -
 
 Reformat Python code blocks with black, **in place**:
 ```
-codeblocks --python README.md -- black -
+codeblocks --python README.md black -
 ```
 
 Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):

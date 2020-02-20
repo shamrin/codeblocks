@@ -11,6 +11,8 @@ import re
 import sys
 import subprocess
 
+import click
+
 PYTHON_BLOCK_RE = re.compile(
     rb"(?P<start>\n```python\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
@@ -31,7 +33,7 @@ def indent(text: bytes, prefix: bytes):
     )
 
 
-def wrap(index: int, block: bytes):
+def wrap_python(index: int, block: bytes):
     return b"%sdef test_%d() -> None:\n%s" % (
         b"async " if AWAIT_RE.search(block) else b"",
         index,
@@ -39,24 +41,16 @@ def wrap(index: int, block: bytes):
     )
 
 
-def main():
-    option_wrap = False
-    if "--wrap" in sys.argv[1:]:
-        sys.argv.remove("--wrap")
-        option_wrap = True
-
-    language, filename, *args = sys.argv[1:]
-
-    if language not in ("--py", "--python"):
+@click.command()
+@click.option("--python", "--py", is_flag=True, help="Extract Python code blocks.")
+@click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
+@click.argument("source", type=click.Path(dir_okay=False, exists=True, allow_dash=True))
+@click.argument("command", nargs=-1)
+def main(source, python, wrap, command):
+    if not python:
         raise NotImplementedError("languages other than --python not implemented")
 
-    command = []
-    if args:
-        if args[0] != "--":
-            raise Exception(f"-- expected, but got {args[0]}")
-        command = args[1:]
-
-    source = open(filename, "rb").read()
+    input = click.open_file(source, "rb").read()
 
     if command:
 
@@ -69,16 +63,16 @@ def main():
                 )
             return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
-        processed = PYTHON_BLOCK_RE.sub(replace, source)
-        with open(filename, "wb") as output_file:
-            output_file.write(processed)
+        output = PYTHON_BLOCK_RE.sub(replace, input)
+        with click.open_file(source, "wb", atomic=True) as output_file:
+            output_file.write(output)
 
     else:
-        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(source)]
+        blocks = [match.group("code") for match in PYTHON_BLOCK_RE.finditer(input)]
         if blocks:
             sys.stdout.buffer.write(
                 b"\n\n".join(
-                    wrap(i, block) if option_wrap else block
+                    wrap_python(i, block) if wrap else block
                     for i, block in enumerate(blocks)
                 )
             )
