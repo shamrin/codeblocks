@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 import sys
 import subprocess
+from textwrap import shorten
 
 import click
 
@@ -19,6 +20,10 @@ BLOCK_RE = re.compile(
 
 WORD_RE = re.compile(rb"\w+")
 AWAIT_RE = re.compile(rb"\bawait\b")
+
+
+def exit(command, message):
+    sys.exit(f"codeblocks: command `{' '.join(command)}` {message}.")
 
 
 def indent(text: bytes, prefix: bytes):
@@ -78,11 +83,15 @@ def main(source, type, wrap, command):
                 return match.expand(br"\g<start>\g<code>\g<end>")
 
             code = match.group("code")
+
             p = subprocess.run(command, input=code, capture_output=True)
+            if p.returncode != 0:
+                sys.stderr.buffer.write(p.stderr)
+                exit(command, f"returned non-zero exit status {p.returncode}")
             if set(WORD_RE.findall(code)) != set(WORD_RE.findall(p.stdout)):
-                raise Exception(
-                    f"Command did not produce matching output: {' '.join(command)}"
-                )
+                short = shorten(p.stdout.decode("utf8", "ignore"), 40)
+                exit(command, f"did not produce matching output: `{short}`")
+
             return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
         output = BLOCK_RE.sub(replace, input)
