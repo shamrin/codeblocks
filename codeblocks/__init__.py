@@ -15,7 +15,7 @@ from textwrap import shorten
 import click
 
 BLOCK_RE = re.compile(
-    rb"(?P<start>\n```(?P<type>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
+    rb"(?P<start>\n```(?P<language>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
 
 WORD_RE = re.compile(rb"\w+")
@@ -56,20 +56,24 @@ def wrap_block(index: int, block_type: str, block: bytes):
 
 
 @click.command()
-@click.option("--type", help="Select code blocks of specified type only.")
-@click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
-@click.argument("source", type=click.Path(dir_okay=False, exists=True, allow_dash=True))
+@click.argument("language")
+@click.argument(
+    "source",
+    type=click.Path(dir_okay=False, exists=True, allow_dash=True),
+    metavar="FILE",
+)
 @click.argument("command", nargs=-1)
-def main(source, type, wrap, command):
-    """Extract or process code blocks in Markdown FILE.
+@click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
+def main(language, source, command, wrap):
+    """Extract or process LANGUAGE code blocks in Markdown FILE.
 
     \b
     Extract Python code blocks:
-        codeblocks --type python README.md
+        codeblocks python README.md
 
     \b
     Reformat Python code blocks using black, in place:
-        codeblocks --type python README.md black -
+        codeblocks python README.md black -
     """
 
     input = click.open_file(source, "rb").read()
@@ -77,9 +81,9 @@ def main(source, type, wrap, command):
     if command:
 
         def replace(match: re.Match[bytes]) -> bytes:
-            block_type = match.group("type").decode("utf8")
+            block_language = match.group("language").decode("utf8")
 
-            if type is not None and block_type != type:
+            if block_language != language:
                 return match.expand(br"\g<start>\g<code>\g<end>")
 
             code = match.group("code")
@@ -100,15 +104,15 @@ def main(source, type, wrap, command):
 
     else:
         blocks = [
-            (match.group("type").decode("utf8"), match.group("code"))
+            (match.group("language").decode("utf8"), match.group("code"))
             for match in BLOCK_RE.finditer(input)
         ]
         if blocks:
             sys.stdout.buffer.write(
                 b"\n\n".join(
-                    wrap_block(i, block_type, block) if wrap else block
-                    for i, (block_type, block) in enumerate(blocks)
-                    if type is None or block_type == type
+                    wrap_block(i, block_language, block) if wrap else block
+                    for i, (block_language, block) in enumerate(blocks)
+                    if block_language == language
                 )
             )
 

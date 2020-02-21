@@ -6,10 +6,11 @@
 * [x] use atomic rename to prevent file truncation
 * [x] support other languages
 * [x] better error handling
-* [ ] examples for pytest, isort, autoflake
+* [ ] reconsider always wrapping (does black work the same?)
 * [ ] test and lint
 * [ ] pip and poetry instructions
 
 # Later
 
+* [ ] examples for pytest, isort, autoflake
 * [ ] use proper markdown parser

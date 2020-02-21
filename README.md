@@ -12,20 +12,19 @@ Extract and process code blocks from Markdown files. Now you can keep code examp
 # Usage
 
 ```usage
-Usage: codeblocks [OPTIONS] SOURCE [COMMAND]...
+Usage: codeblocks [OPTIONS] LANGUAGE FILE [COMMAND]...
 
-  Extract or process code blocks in Markdown FILE.
+  Extract or process LANGUAGE code blocks in Markdown FILE.
 
   Extract Python code blocks:
-      codeblocks --type python README.md
+      codeblocks python README.md
 
   Reformat Python code blocks using black, in place:
-      codeblocks --type python README.md black -
+      codeblocks python README.md black -
 
 Options:
-  --type TEXT  Select code blocks of specified type only.
-  --wrap       Wrap each code block in a function.
-  --help       Show this message and exit.
+  --wrap  Wrap each code block in a function.
+  --help  Show this message and exit.
 ```
 
 # Examples
@@ -37,27 +36,27 @@ codeblocks README.md
 
 Extract Python code blocks:
 ```
-codeblocks --type python README.md
+codeblocks python README.md
 ```
 
 Check formatting of Python code blocks with black:
 ```
-codeblocks --type python README.md | black --check -
+codeblocks python README.md | black --check -
 ```
 
 Reformat Python code blocks with black, **in place**:
 ```
-codeblocks --type python README.md black -
+codeblocks python README.md black -
 ```
 
 Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):
 ```
-mypy somemodule anothermodule <(codeblocks --type python --wrap README.md)
+mypy somemodule anothermodule <(codeblocks python --wrap README.md)
 ```
 
 Make sure `usage` block in this README.md is up-to-date with `--help` output:
 ```
-diff -u <(codeblocks --type usage README.md) <(codeblocks --help)
+diff -u <(codeblocks usage README.md) <(codeblocks --help)
 ```
 
 # Full type checking example
@@ -70,7 +69,7 @@ plus(1, '2')
 ```
 
 ```
-$ mypy --pretty --strict <(codeblocks --type python README.md)
+$ mypy --pretty --strict <(codeblocks python README.md)
 /dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"
         plus(1, '2')
                 ^
