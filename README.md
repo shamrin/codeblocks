@@ -9,6 +9,18 @@ Extract and process code blocks from Markdown files. Now you can keep code examp
 * up-to-date with `--help`
 * etc
 
+# Install
+
+With pip:
+```
+pip install codeblocks
+```
+
+With poetry:
+```
+poetry add codeblocks
+```
+
 # Usage
 
 ```usage
@@ -57,7 +69,7 @@ Insert the output of `codeblock --help` into `usage` block in this README.md:
 codeblocks usage README.md -- codeblocks --help
 ```
 
-Make sure `usage` block in this README.md is up-to-date with `--help` output:
+Check that `usage` block in this README.md is up-to-date with `--help` output:
 ```
 codeblocks --check usage README.md -- codeblocks --help
 ```

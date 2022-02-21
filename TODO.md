@@ -8,7 +8,7 @@
 * [x] better error handling
 * [ ] reconsider always wrapping (does black work the same?)
 * [ ] test and lint
-* [ ] pip and poetry instructions
+* [x] pip and poetry instructions
 
 # Later
 
