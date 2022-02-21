@@ -20,19 +20,17 @@ Usage: codeblocks [OPTIONS] LANGUAGE FILE [COMMAND]...
       codeblocks python README.md
 
   Reformat Python code blocks using black, in place:
-      codeblocks python README.md black -
+      codeblocks python README.md -- black -
 
 Options:
-  --wrap  Wrap each code block in a function.
-  --help  Show this message and exit.
+  --wrap   Wrap each code block in a function.
+  --check  Do not modify the file, just return the status. Return code 0 means
+           block matches the command output. Return code 1 means block would
+           be modified.
+  --help   Show this message and exit.
 ```
 
 # Examples
-
-Extract all named code blocks:
-```
-codeblocks README.md
-```
 
 Extract Python code blocks:
 ```
@@ -41,12 +39,12 @@ codeblocks python README.md
 
 Check formatting of Python code blocks with black:
 ```
-codeblocks python README.md | black --check -
+codeblocks --check python README.md -- black -
 ```
 
 Reformat Python code blocks with black, **in place**:
 ```
-codeblocks python README.md black -
+codeblocks python README.md -- black -
 ```
 
 Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):
@@ -54,9 +52,14 @@ Type check Python code blocks with mypy (`--wrap` puts each code block into its 
 mypy somemodule anothermodule <(codeblocks python --wrap README.md)
 ```
 
+Insert the output of `codeblock --help` into `usage` block in this README.md:
+```
+codeblocks usage README.md -- codeblocks --help
+```
+
 Make sure `usage` block in this README.md is up-to-date with `--help` output:
 ```
-diff -u <(codeblocks usage README.md) <(codeblocks --help)
+codeblocks --check usage README.md -- codeblocks --help
 ```
 
 # Full type checking example

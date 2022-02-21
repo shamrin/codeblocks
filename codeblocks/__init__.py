@@ -18,7 +18,6 @@ BLOCK_RE = re.compile(
     rb"(?P<start>\n```(?P<language>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
 )
 
-WORD_RE = re.compile(rb"\w+")
 AWAIT_RE = re.compile(rb"\bawait\b")
 
 
@@ -64,7 +63,14 @@ def wrap_block(index: int, block_type: str, block: bytes):
 )
 @click.argument("command", nargs=-1)
 @click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
-def main(language, source, command, wrap):
+@click.option(
+    "--check",
+    is_flag=True,
+    help="Do not modify the file, just return the status."
+    " Return code 0 means block matches the command output."
+    " Return code 1 means block would be modified.",
+)
+def main(language, source, command, wrap, check):
     """Extract or process LANGUAGE code blocks in Markdown FILE.
 
     \b
@@ -73,7 +79,7 @@ def main(language, source, command, wrap):
 
     \b
     Reformat Python code blocks using black, in place:
-        codeblocks python README.md black -
+        codeblocks python README.md -- black -
     """
 
     input = click.open_file(source, "rb").read()
@@ -92,9 +98,16 @@ def main(language, source, command, wrap):
             if p.returncode != 0:
                 sys.stderr.buffer.write(p.stderr)
                 exit(command, f"returned non-zero exit status {p.returncode}")
-            if set(WORD_RE.findall(code)) != set(WORD_RE.findall(p.stdout)):
-                short = shorten(p.stdout.decode("utf8", "ignore"), 40)
-                exit(command, f"did not produce matching output: `{short}`")
+
+            if check:
+                if p.stdout == code:
+                    print(
+                        f"codeblocks: `{language}` block matches command `{' '.join(command)}` output."
+                    )
+                else:
+                    sys.exit(
+                        f"codeblocks: `{language}` block would be modified by `{' '.join(command)}` output."
+                    )
 
             return match.expand(br"\g<start>%s\g<end>" % p.stdout)
 
