@@ -99,6 +99,10 @@ def main(language, source, command, wrap, check):
                 sys.stderr.buffer.write(p.stderr)
                 exit(command, f"returned non-zero exit status {p.returncode}")
 
+            # sanity check
+            if not p.stdout or p.stdout.isspace():
+                exit(command, f"produced empty output")
+
             if check:
                 if p.stdout == code:
                     print(
