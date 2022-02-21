@@ -15,7 +15,7 @@ from textwrap import shorten
 import click
 
 BLOCK_RE = re.compile(
-    rb"(?P<start>\n```(?P<language>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL
+    rb"(?P<start>^```(?P<language>\w+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL | re.MULTILINE
 )
 
 AWAIT_RE = re.compile(rb"\bawait\b")

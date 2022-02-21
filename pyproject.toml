@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codeblocks"
-version = "0.2.0"
+version = "0.2.1"
 description = "Extract and process code blocks from Markdown files."
 authors = ["Alexey Shamrin <shamrin@gmail.com>"]
 license = "Apache License 2.0"
