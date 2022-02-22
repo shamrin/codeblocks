@@ -31,14 +31,14 @@ Usage: codeblocks [OPTIONS] LANGUAGE FILE [COMMAND]...
   Extract Python code blocks:
       codeblocks python README.md
 
-  Reformat Python code blocks using black, in place:
+  Reformat Python code blocks with `black`, in place:
       codeblocks python README.md -- black -
 
 Options:
   --wrap   Wrap each code block in a function.
   --check  Do not modify the file, just return the status. Return code 0 means
-           block matches the command output. Return code 1 means block would
-           be modified.
+           block matches COMMAND output. Return code 1 means block would be
+           modified.
 
   --help   Show this message and exit.
 ```

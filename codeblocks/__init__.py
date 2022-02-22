@@ -15,7 +15,8 @@ from textwrap import shorten
 import click
 
 BLOCK_RE = re.compile(
-    rb"(?P<start>^```(?P<language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)", re.DOTALL | re.MULTILINE
+    rb"(?P<start>^```(?P<language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)",
+    re.DOTALL | re.MULTILINE,
 )
 
 AWAIT_RE = re.compile(rb"\bawait\b")
@@ -67,7 +68,7 @@ def wrap_block(index: int, block_type: str, block: bytes):
     "--check",
     is_flag=True,
     help="Do not modify the file, just return the status."
-    " Return code 0 means block matches the command output."
+    " Return code 0 means block matches COMMAND output."
     " Return code 1 means block would be modified.",
 )
 def main(language, source, command, wrap, check):
@@ -78,7 +79,7 @@ def main(language, source, command, wrap, check):
         codeblocks python README.md
 
     \b
-    Reformat Python code blocks using black, in place:
+    Reformat Python code blocks with `black`, in place:
         codeblocks python README.md -- black -
     """
 
