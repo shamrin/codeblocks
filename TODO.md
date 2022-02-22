@@ -6,7 +6,7 @@
 * [x] use atomic rename to prevent file truncation
 * [x] support other languages
 * [x] better error handling
-* [ ] reconsider always wrapping (does black work the same?)
+* [x] reconsider always wrapping (does black work the same?)
 * [ ] test and lint
 * [x] pip and poetry instructions
 
