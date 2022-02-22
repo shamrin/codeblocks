@@ -100,6 +100,7 @@ There are alternative tools, but none of them supported all of the cases above.
 * [blacken-docs][] can reformat Python code blocks, but it does not support all [black][] options. For example, [`black --check`][blacken-check] is not supported. No lint or unit test support. In addition, `codeblocks` implementation is much simpler and is not coupled with black.
 * [excode][] is very similar, but does not support in place modifications.
 * [gfm-code-blocks][] does not have command line interface.
+* [codedown][] does not support processing and [separate code block extraction](https://github.com/earldouglas/codedown/issues/9)
 * [cog][] is fully generic, but requires writing [scripts embedded in Markdown][cog-help]
 
 [black]: https://github.com/psf/black
@@ -111,4 +112,5 @@ There are alternative tools, but none of them supported all of the cases above.
 [excode]: https://github.com/nschloe/excode
 [gfm-code-blocks]: https://github.com/jonschlinkert/gfm-code-blocks
 [cog-help]: https://til.simonwillison.net/python/cog-to-update-help-in-readme
+[codedown]: https://github.com/earldouglas/codedown
 [cog]: https://nedbatchelder.com/code/cog
