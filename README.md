@@ -45,10 +45,7 @@ Options:
 
 # Examples
 
-Extract Python code blocks:
-```
-codeblocks extract python README.md
-```
+## Code formatting
 
 Reformat Python code blocks with `black -`, **in place**:
 ```
@@ -66,10 +63,14 @@ black --check <(codeblocks extract -n1 python README.md) \
               ...
 ```
 
+## Type-checking
+
 Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):
 ```
 codeblocks extract --psub --wrap python README.md -- mypy somemodule
 ```
+
+## Keeping `--help` up-to-date
 
 Insert the output of `codeblock --help` into the first `usage` block in the README.md that you now read:
 ```
@@ -81,7 +82,8 @@ Check that first `usage` block in this README.md is up-to-date with `codeblocks 
 codeblocks check -n1 usage README.md -- codeblocks --help
 ```
 
-Brainstorming:
+## Brainstorming
+
 ```console
 # reformat
 codeblocks process python README.md -- black -
