@@ -103,6 +103,40 @@ codeblocks process -n1 usage README.md -- codeblocks --help
 codeblocks check -n1 usage README.md -- codeblocks --help
 ```
 
+Inspired by `gron --ungron`:
+
+```console
+# reformat (needs special comments to denote blocks)
+codeblocks extract python README.md | black - | codeblock inject python README.md
+codeblocks process [--all] --command='black -' python README.md
+
+# reformat, for each
+codeblocks process [--each] --command='black -' python README.md
+
+# reformat, psub
+codeblocks process [--all] --command='black {}' python README.md
+
+# check formatting (needs special comments to denote blocks)
+codeblocks extract python README.md | black - | codeblock check python README.md
+
+# check formatting, diff
+diff -u <(codeblocks extract python README.md) <(codeblocks extract python README.md | black -)
+
+# type-check
+mypy somemodule <(codeblocks extract --wrap python README.md)
+
+# type-check, psub
+codeblocks extract --command 'mypy somemodule {}' python 
+
+# type-check (if https://github.com/python/mypy/issues/12235 lands)
+codeblocks extract --wrap python README.md | mypy somemodule -
+
+# keep `--help` example up-to-date or check it
+codeblocks --help | codeblocks inject -n1 usage README.md
+codeblocks --help | codeblocks check -n1 usage README.md
+diff -u <(codeblocks extract -n1 usage README.md) <(codeblocks --help)
+```
+
 # Full type checking example
 
 ```python
