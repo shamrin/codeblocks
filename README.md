@@ -103,21 +103,20 @@ codeblocks process -n1 usage README.md -- codeblocks --help
 codeblocks check -n1 usage README.md -- codeblocks --help
 ```
 
-Inspired by `gron --ungron`:
+With `--command`:
 
 ```console
-# reformat (needs special comments to denote blocks)
-codeblocks extract python README.md | black - | codeblock inject python README.md
-codeblocks process [--all] --command='black -' python README.md
-
-# reformat, for each
+# reformat, each
 codeblocks process [--each] --command='black -' python README.md
 
 # reformat, psub
 codeblocks process [--all] --command='black {}' python README.md
 
-# check formatting (needs special comments to denote blocks)
-codeblocks extract python README.md | black - | codeblock check python README.md
+# check formatting, each
+codeblocks extract [--each] --command='black --check -' python README.md
+
+# check formatting, psub
+codeblocks extract [--all] --command='black --check {}' python README.md
 
 # check formatting, diff
 diff -u <(codeblocks extract python README.md) <(codeblocks extract python README.md | black -)
@@ -126,14 +125,14 @@ diff -u <(codeblocks extract python README.md) <(codeblocks extract python READM
 mypy somemodule <(codeblocks extract --wrap python README.md)
 
 # type-check, psub
-codeblocks extract --command 'mypy somemodule {}' python 
+codeblocks extract --command='mypy somemodule {}' python 
 
 # type-check (if https://github.com/python/mypy/issues/12235 lands)
 codeblocks extract --wrap python README.md | mypy somemodule -
 
 # keep `--help` example up-to-date or check it
-codeblocks --help | codeblocks inject -n1 usage README.md
-codeblocks --help | codeblocks check -n1 usage README.md
+codeblocks process --command='codeblocks --help' -n1 usage README
+codeblocks check --command='codeblocks --help' -n1 usage README
 diff -u <(codeblocks extract -n1 usage README.md) <(codeblocks --help)
 ```
 
