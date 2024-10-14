@@ -8,9 +8,8 @@ For example: codeblocks README.md
 from __future__ import annotations
 
 import re
-import sys
 import subprocess
-from textwrap import shorten
+import sys
 
 import click
 
@@ -65,7 +64,8 @@ def wrap_block(index: int, block_type: str, block: bytes):
 @click.argument("command", nargs=-1)
 @click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
 @click.option(
-    "--check",
+    "--check/--no-check",
+    default=False,
     is_flag=True,
     help="Do not modify the file, just return the status."
     " Return code 0 means block matches COMMAND output."
@@ -91,7 +91,7 @@ def main(language, source, command, wrap, check):
             block_language = match.group("language").decode("utf8")
 
             if block_language != language:
-                return match.expand(br"\g<start>\g<code>\g<end>")
+                return match.expand(rb"\g<start>\g<code>\g<end>")
 
             code = match.group("code")
 
@@ -102,7 +102,7 @@ def main(language, source, command, wrap, check):
 
             # sanity check
             if not p.stdout or p.stdout.isspace():
-                exit(command, f"produced empty output")
+                exit(command, "produced empty output")
 
             if check:
                 if p.stdout == code:
@@ -114,7 +114,7 @@ def main(language, source, command, wrap, check):
                         f"codeblocks: `{language}` block would be modified by `{' '.join(command)}` output."
                     )
 
-            return match.expand(br"\g<start>%s\g<end>" % p.stdout)
+            return match.expand(rb"\g<start>%s\g<end>" % p.stdout)
 
         output = BLOCK_RE.sub(replace, input)
         with click.open_file(source, "wb", atomic=True) as output_file:
