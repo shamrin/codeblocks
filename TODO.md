@@ -9,8 +9,11 @@
 * [x] reconsider always wrapping (does black work the same?)
 * [ ] test and lint
 * [x] pip and poetry instructions
+* [ ] make a release that fixes outdated `click` problem
 
-# Later
+# Maybe / Later
 
 * [ ] examples for pytest, isort, autoflake
-* [ ] use proper markdown parser
+* [ ] consider proper markdown parser
+* [ ] look into pandoc support
+* [ ] consider making non-Python implementation
