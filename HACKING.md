@@ -5,10 +5,13 @@ Run locally:
 uv run codeblocks --help
 ```
 
-Modify `usage` block in our README.md:
-
+Sanity check:
 ```
+# modify `usage` block in our README
 uv run codeblocks usage README.md -- codeblocks --help
+
+# confirm that mypy fails with `incompatible type` error with our README
+uv run mypy --pretty <(uv run codeblocks python README.md)
 ```
 
 Publish:

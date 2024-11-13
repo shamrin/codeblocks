@@ -106,10 +106,10 @@ plus(1, '2')
 ```
 
 ```
-$ mypy --pretty --strict <(codeblocks python README.md)
-/dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"
+$ mypy --pretty <(codeblocks python README.md)
+/dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"  [arg-type]
         plus(1, '2')
-                ^
+                ^~~
 Found 1 error in 1 file (checked 1 source file)
 ```
 
