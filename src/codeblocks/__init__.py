@@ -71,6 +71,7 @@ def wrap_block(index: int, block_type: str, block: bytes):
     " Return code 0 means block matches COMMAND output."
     " Return code 1 means block would be modified.",
 )
+@click.version_option()
 def main(language, source, command, wrap, check):
     """Extract or process LANGUAGE code blocks in Markdown FILE.
 

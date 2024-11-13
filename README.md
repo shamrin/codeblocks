@@ -61,6 +61,7 @@ Options:
   --check / --no-check  Do not modify the file, just return the status. Return
                         code 0 means block matches COMMAND output. Return code
                         1 means block would be modified.
+  --version             Show the version and exit.
   --help                Show this message and exit.
 ```
 

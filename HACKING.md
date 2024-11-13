@@ -25,5 +25,5 @@ vim .env
 env $(cat .env) uv publish
 
 # test install (`--no-project` avoids installing from local directory)
-uv run --with codeblocks --no-project -- codeblocks --help
+uv run --with codeblocks --no-project -- codeblocks --version
 ```
