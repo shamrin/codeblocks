@@ -9,7 +9,9 @@
 * [x] reconsider always wrapping (does black work the same?)
 * [ ] test and lint
 * [x] pip and poetry instructions
-* [ ] make a release that fixes outdated `click` problem
+* [x] make a release that fixes outdated `click` problem
+* [ ] consider removing `--no-check`: https://github.com/shamrin/codeblocks/pull/3#issuecomment-2473945920
+* [x] switch to `uv` in HACKING.md
 
 # Maybe / Later
 

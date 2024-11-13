@@ -9,14 +9,36 @@ Extract and process code blocks from Markdown files. Now you can keep code examp
 * up-to-date with `--help`
 * etc
 
-# Install
+# Quick start
 
-With pip:
+(if [uv](https://docs.astral.sh/uv/) is available)
+
+Try `codeblocks` without installing:
+
+```
+uvx codeblocks --help
+```
+
+Install to `PATH`:
+
+```
+uv tool install codeblocks
+codeblocks --help
+```
+
+# Install with Python package manager
+
+With `pip`:
 ```
 pip install codeblocks
 ```
 
-With poetry:
+With `uv`:
+```
+uv add codeblocks
+```
+
+With `poetry`:
 ```
 poetry add codeblocks
 ```
@@ -35,12 +57,11 @@ Usage: codeblocks [OPTIONS] LANGUAGE FILE [COMMAND]...
       codeblocks python README.md -- black -
 
 Options:
-  --wrap   Wrap each code block in a function.
-  --check  Do not modify the file, just return the status. Return code 0 means
-           block matches COMMAND output. Return code 1 means block would be
-           modified.
-
-  --help   Show this message and exit.
+  --wrap                Wrap each code block in a function.
+  --check / --no-check  Do not modify the file, just return the status. Return
+                        code 0 means block matches COMMAND output. Return code
+                        1 means block would be modified.
+  --help                Show this message and exit.
 ```
 
 # Examples

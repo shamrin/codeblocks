@@ -1,13 +1,19 @@
+Install [uv](https://docs.astral.sh/uv/).
+
 Run locally:
 ```
-brew install python@3.7
-poetry env use /usr/local/opt/python@3.7/bin/python3
-poetry install
-source .venv/bin/activate.fish
-codeblocks --help
+uv run codeblocks --help
+```
+
+Modify `usage` block in our README.md:
+
+```
+uv run codeblocks usage README.md -- codeblocks --help
 ```
 
 Publish:
 ```
-poetry publish --build
+uv build
+# put PyPI API token as `UV_PUBLISH_TOKEN=...` in `.env` file
+env $(cat .env) uv publish
 ```
