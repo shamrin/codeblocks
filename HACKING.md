@@ -17,6 +17,9 @@ uv run mypy --pretty <(uv run codeblocks python README.md)
 
 Publish:
 ```
+# bump version
+vim pyproject.toml
+
 uv build
 
 # put PyPI API token as `UV_PUBLISH_TOKEN=...` in `.env` file
@@ -25,5 +28,5 @@ vim .env
 env $(cat .env) uv publish
 
 # test install (`--no-project` avoids installing from local directory)
-uv run --with codeblocks --no-project -- codeblocks --version
+uv run --with codeblocks --no-project --reinstall -- codeblocks --version
 ```

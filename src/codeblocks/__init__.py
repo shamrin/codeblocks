@@ -64,7 +64,7 @@ def wrap_block(index: int, block_type: str, block: bytes):
 @click.argument("command", nargs=-1)
 @click.option("--wrap", is_flag=True, help="Wrap each code block in a function.")
 @click.option(
-    "--check/--no-check",
+    "--check",
     default=False,
     is_flag=True,
     help="Do not modify the file, just return the status."

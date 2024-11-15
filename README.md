@@ -57,12 +57,12 @@ Usage: codeblocks [OPTIONS] LANGUAGE FILE [COMMAND]...
       codeblocks python README.md -- black -
 
 Options:
-  --wrap                Wrap each code block in a function.
-  --check / --no-check  Do not modify the file, just return the status. Return
-                        code 0 means block matches COMMAND output. Return code
-                        1 means block would be modified.
-  --version             Show the version and exit.
-  --help                Show this message and exit.
+  --wrap     Wrap each code block in a function.
+  --check    Do not modify the file, just return the status. Return code 0
+             means block matches COMMAND output. Return code 1 means block
+             would be modified.
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 ```
 
 # Examples
