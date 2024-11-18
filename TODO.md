@@ -10,7 +10,7 @@
 * [ ] test and lint
 * [x] pip and poetry instructions
 * [x] make a release that fixes outdated `click` problem
-* [ ] consider removing `--no-check`: https://github.com/shamrin/codeblocks/pull/3#issuecomment-2473945920
+* [x] remove `--no-check`: https://github.com/shamrin/codeblocks/pull/3#issuecomment-2473945920
 * [x] switch to `uv` in HACKING.md
 
 # Maybe / Later
