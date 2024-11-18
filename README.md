@@ -67,34 +67,95 @@ Options:
 
 # Examples
 
-Extract Python code blocks:
+## Code formatting
+
+Reformat Python code blocks with `black -`, **in place**:
 ```
-codeblocks python README.md
+codeblocks process python README.md -- black -
 ```
 
-Check formatting of Python code blocks with black:
+Check formatting of Python code blocks with `black --check` (`--psub` passes each block via named pipe aka process substitution):
 ```
-codeblocks --check python README.md -- black -
+codeblocks extract --psub python README.md -- black --check
+
+# rough equivalent
+black --check <(codeblocks extract -n1 python README.md) \
+              <(codeblocks extract -n2 python README.md) \
+              <(codeblocks extract -n3 python README.md) \
+              ...
 ```
 
-Reformat Python code blocks with black, **in place**:
-```
-codeblocks python README.md -- black -
-```
+## Type-checking
 
 Type check Python code blocks with mypy (`--wrap` puts each code block into its own function):
 ```
-mypy somemodule anothermodule <(codeblocks python --wrap README.md)
+codeblocks extract --psub --wrap python README.md -- mypy somemodule
 ```
 
-Insert the output of `codeblock --help` into `usage` block in this README.md:
+## Keeping `--help` up-to-date
+
+Insert the output of `codeblock --help` into the first `usage` block in the README.md that you now read:
 ```
-codeblocks usage README.md -- codeblocks --help
+codeblocks process -n1 usage README.md -- codeblocks --help
 ```
 
-Check that `usage` block in this README.md is up-to-date with `--help` output:
+Check that first `usage` block in this README.md is up-to-date with `codeblocks --help` output:
 ```
-codeblocks --check usage README.md -- codeblocks --help
+codeblocks check -n1 usage README.md -- codeblocks --help
+```
+
+## Brainstorming
+
+```console
+# reformat
+codeblocks process python README.md -- black -
+
+# check formatting
+codeblocks check python README.md -- black -
+codeblocks extract python README.md -- black --check -
+codeblocks extract --psub python README.md -- black --check
+codeblocks extract python README.md | black --check -
+
+# type-check
+mypy somemodule <(codeblocks extract --wrap python README.md)
+codeblocks extract --psub --wrap python README.md -- mypy somemodule
+
+# keep `--help` example up-to-date or check it
+codeblocks process -n1 usage README.md -- codeblocks --help
+codeblocks check -n1 usage README.md -- codeblocks --help
+```
+
+With `--command`:
+
+```console
+# reformat, each
+codeblocks process [--each] --command='black -' python README.md
+
+# reformat, psub
+codeblocks process [--all] --command='black {}' python README.md
+
+# check formatting, each
+codeblocks extract [--each] --command='black --check -' python README.md
+
+# check formatting, psub
+codeblocks extract [--all] --command='black --check {}' python README.md
+
+# check formatting, diff
+diff -u <(codeblocks extract python README.md) <(codeblocks extract python README.md | black -)
+
+# type-check
+mypy somemodule <(codeblocks extract --wrap python README.md)
+
+# type-check, psub
+codeblocks extract --command='mypy somemodule {}' python 
+
+# type-check (if https://github.com/python/mypy/issues/12235 lands)
+codeblocks extract --wrap python README.md | mypy somemodule -
+
+# keep `--help` example up-to-date or check it
+codeblocks process --command='codeblocks --help' -n1 usage README
+codeblocks check --command='codeblocks --help' -n1 usage README
+diff -u <(codeblocks extract -n1 usage README.md) <(codeblocks --help)
 ```
 
 # Full type checking example
