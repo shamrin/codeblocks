@@ -106,7 +106,7 @@ def plus(x: int, y: int) -> int:
 plus(1, '2')
 ```
 
-```
+```console
 $ mypy --pretty <(codeblocks python README.md)
 /dev/fd/63:5: error: Argument 2 to "plus" has incompatible type "str"; expected "int"  [arg-type]
         plus(1, '2')
