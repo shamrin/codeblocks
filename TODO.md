@@ -12,6 +12,10 @@
 * [x] make a release that fixes outdated `click` problem
 * [x] remove `--no-check`: https://github.com/shamrin/codeblocks/pull/3#issuecomment-2473945920
 * [x] switch to `uv` in HACKING.md
+* [ ] auto-magically check `console` blocks with `$ ...` invocations (see `mypy` example in README.md):
+  - check that passed command matches `$ ...` line in `console block (or `.endswith()`)
+  - run it automatically and match with the output
+  - what about multiple `$ ...` lines?
 
 # Maybe / Later
 
